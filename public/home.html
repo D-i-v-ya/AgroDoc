@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Doctor</title>
+
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: url('./images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Container with transparent background */
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: rgba(205, 250, 212, 0.8);
+            /* Semi-transparent background */
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 1;
+            /* Default opacity */
+            animation: fadeOut 5s forwards 3s;
+            /* Fade out after 3 seconds, over 5 seconds */
+            transition: opacity 1s ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        .header {
+            margin-bottom: 20px;
+            /* Added spacing below header */
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-family: 'Cursive', sans-serif;
+            color: #333;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .highlight {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            /* Added spacing below logo */
+        }
+
+        .logo img {
+            width: 100px;
+            animation: logoBounce 2s infinite;
+            /* Simple bounce animation for the logo */
+        }
+
+        @keyframes logoBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .logo h2 {
+            font-size: 2.25rem;
+            color: #333;
+            font-family: 'Cursive', sans-serif;
+        }
+
+        .logo p {
+            font-size: 1rem;
+            font-family: 'Cursive', sans-serif;
+            color: #666;
+        }
+
+        .illustration {
+            flex-grow: 1;
+            /* Allow the image section to grow and fill remaining space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .illustration img {
+            width: 50%;
+            /* Make the image span the full width of the container */
+            height: auto;
+            /* Maintain aspect ratio */
+            border-radius: 10px;
+            margin-top: 20px;
+            /* Add shadow to image */
+            animation: imageZoom 2s ease-in-out forwards;
+            /* Add zoom effect to the image */
+        }
+
+        @keyframes imageZoom {
+            from {
+                transform: scale(0.95);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.15rem;
+            }
+
+            .logo h2 {
+                font-size: 2rem;
+            }
+
+            .logo p {
+                font-size: 0.9rem;
+            }
+
+            .illustration img {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .logo img {
+                width: 80px;
+            }
+
+            .logo h2 {
+                font-size: 1.75rem;
+            }
+
+            .logo p {
+                font-size: 0.85rem;
+            }
+
+            .illustration img {
+                width: 100%;
+                /* Ensure it still covers full width on smaller devices */
+            }
+        }
+
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .logo h2 {
+                font-size: 1.5rem;
+            }
+
+            .logo p {
+                font-size: 0.75rem;
+            }
+
+            .illustration img {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome</h1>
+            <p>Have a smart <span class="highlight">Agri</span></p>
+        </div>
+        <div class="logo">
+            <img src="./images/logo.png" alt="Agro Doctor Logo">
+            <h2>Agro Doctor</h2>
+            <p>Sow, Grow, and Glow</p>
+        </div>
+        <div class="illustration">
+            <img src="./images/farmer.png" alt="Farmer Illustration">
+        </div>
+    </div>
+    <script>
+        // Redirect to login.html after 8 seconds (3s for delay + 5s for fade-out)
+        setTimeout(function () {
+            window.location.href = 'login.html';
+        }, 8000);
+    </script>
+</body>
+
+</html>

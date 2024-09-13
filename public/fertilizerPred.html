@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Your Fertilizer - Agro Doctor</title>
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        h2 {
+            color: #45a049;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            background-image: url('./images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+        }
+
+        /* Navbar Styles */
+.navbar {
+    width: 100%;
+    background-color: #4CAF50;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed; /* Position navbar at the top */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure navbar is on top */
+}
+
+/* Logo inside navbar */
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.navbar .logo img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+/* Navbar links */
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar .nav-links li {
+    display: inline;
+}
+
+.navbar .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+/* Adjust the container to account for fixed navbar */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 20px auto;
+    padding: 40px;
+    width: 90%;
+    max-width: 900px;
+    background-color: rgba(205, 250, 212, 0.8);
+    border: 1px solid #0f160c;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 80px; /* Adjust this value based on the height of the navbar */
+}
+
+.optcontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 20px auto;
+    padding: 40px;
+    width: 90%;
+    max-width: 900px;
+    background-color: rgba(205, 250, 212, 0.8);
+    border: 1px solid #0f160c;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Adjust this value based on the height of the navbar */
+}
+
+        .form-group {
+            margin: 20px 0;
+            width: 100%;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1rem;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        /* Container styling */
+.form-group {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding-bottom: 30px;
+}
+
+.crop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Ensures 4 items per row */
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+}
+
+.crop-grid div {
+    text-align: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.crop-grid div:hover {
+    transform: scale(1.05); /* Slight hover effect to make it interactive */
+}
+
+.crop-grid img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.crop-grid button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px; /* Spacing between the image and the button */
+    transition: background-color 0.3s ease;
+}
+
+.crop-grid button:hover {
+    background-color: #45a049;
+}
+
+        /* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+        
+/* Map Section */
+#map {
+    height: 300px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.map-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.map-tooltip .tooltip-content {
+    visibility: hidden;
+    width: 300px;
+    background-color: #fff;
+    color: #000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -150px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-tooltip .tooltip-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+}
+
+.map-tooltip:hover .tooltip-content {
+    visibility: visible;
+}
+
+.map-tooltip .tooltip-content .map-container {
+    height: 200px;
+    width: 100%;
+}
+
+       /* Search Box */
+.search-container {
+    margin: 30px 0;
+}
+
+.search-container input {
+    width: 80%;
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+/* Yes/No Button Group */
+.yes-no-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.yes-no-container button {
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease;
+}
+
+.yes-no-container button.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.yes-no-container button:hover {
+    background-color: #e0e0e0;
+}
+        .form-group select, 
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">
+        <img src="./images/logo.png" alt="Logo">
+        <h2>Agro Doctor</h2>
+    </div>
+    <ul class="nav-links">
+        <li><a href="dashboard.html">Home</a></li>
+        <li><a href="login.html">Logout</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+    </ul>
+</div>
+
+<div class="container">
+    <h2>Plan Your Fertilizer</h2>
+    <img src="./images/fertPred.png" alt="fert"><br><br>
+    <p>[Please fill out the below details to receive a personalized fertilizer recommendation based on your planting needs.]</p><br><br>
+    
+    <form id="fertilizer-form" method="POST" action="/submit-form">
+        <div class="form-group">
+            <label for="planting-date">Date of Planting</label>
+            <input type="text" id="planting-date" name="planting-date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Location</label>
+            <div class="map-tooltip">
+                <img src="./images/loc.png" alt="Location Icon" style="width:100px; height:100px; cursor: pointer;">
+                <div class="tooltip-content">
+                    <div class="search-container">
+                        <input type="text" id="search-location" placeholder="Search for a location">
+                        <button id="use-current-location">Use Current Location</button>
+                    </div>
+                    <div id="map" class="map-container"></div> <!-- Map Div for Location Selection -->
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="crop-type">Crop Type</label>
+            <select id="crop-type" name="crop-type" onclick="showCropOptions()">
+                <option value="">Select Your Crop Type</option>
+            </select>
+        </div>
+        
+        <!-- Hidden container for crop selection -->
+        <div id="crop-container" class="optcontainer" style="display: none;">
+            <h2>Select Your Crop Type</h2><br>
+            <div class="crop-grid">
+                <div data-value="banana" onclick="selectCrop('banana')">
+                    <img src="./images/banana.jpg" alt="Banana">
+                    <button>Select Banana</button>
+                </div>
+                <div data-value="coconut" onclick="selectCrop('coconut')">
+                    <img src="./images/coconut.jpg" alt="Coconut">
+                    <button>Select Coconut</button>
+                </div>
+                <div data-value="cotton" onclick="selectCrop('cotton')">
+                    <img src="./images/cotton.jpg" alt="Cotton">
+                    <button>Select Cotton</button>
+                </div>
+                <div data-value="groundnut" onclick="selectCrop('groundnut')">
+                    <img src="./images/peanut.jpg" alt="Groundnut">
+                    <button>Select Groundnut</button>
+                </div>
+                <div data-value="maize" onclick="selectCrop('maize')">
+                    <img src="./images/maize.jpg" alt="Maize">
+                    <button>Select Maize</button>
+                </div>
+                <div data-value="millets" onclick="selectCrop('millets')">
+                    <img src="./images/millets.jpg" alt="Millets">
+                    <button>Select Millets</button>
+                </div>
+                <div data-value="pulses" onclick="selectCrop('pulses')">
+                    <img src="./images/pulses.jpg" alt="Pulses">
+                    <button>Select Pulses</button>
+                </div>
+                <div data-value="sugarcane" onclick="selectCrop('sugarcane')">
+                    <img src="./images/sugarcane.jpg" alt="Sugarcane">
+                    <button>Select Sugarcane</button>
+                </div>
+                <div data-value="tapioca" onclick="selectCrop('tapioca')">
+                    <img src="./images/tapioca.jpg" alt="Tapioca">
+                    <button>Select Tapioca</button>
+                </div>
+                <div data-value="turmeric" onclick="selectCrop('turmeric')">
+                    <img src="./images/turmeric.jpg" alt="Turmeric">
+                    <button>Select Turmeric</button>
+                </div>
+                <div data-value="sunflower" onclick="selectCrop('sunflower')">
+                    <img src="./images/sunflower.jpg" alt="Sunflower">
+                    <button>Select Sunflower</button>
+                </div>
+                <div data-value="tomato" onclick="selectCrop('tomato')">
+                    <img src="./images/tomato.jpg" alt="Tomato">
+                    <button>Select Tomato</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="crop-growth">How many times the selected crop has grown?</label>
+            <input type="number" id="crop-growth" name="crop-growth" min="1" max="10" required>
+        </div>
+
+        <div class="form-group">
+            <label for="previous-yield">Previous Yield</label>
+            <select id="previous-yield" name="previous-yield">
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Bad">Bad</option>
+            </select>
+        </div>
+        <form id="soilForm">
+
+            <!-- Soil Type Dropdown -->
+<div class="form-group">
+    <label for="soil-type">Soil Type</label>
+    <select id="soil-type" name="soil-type" onclick="showSoilOptions()">
+        <option value="">Select Your Soil Type</option>
+    </select>
+</div>
+
+<!-- Hidden container for soil type selection -->
+<div id="soil-container" class="optcontainer" style="display: none;">
+    <h2>Select Your Soil Type</h2><br>
+    <div class="crop-grid">
+        <div data-value="sandy" onclick="selectSoil('Sandy')">
+            <img src="./images/sandy.jpg" alt="Sandy Soil">
+            <button>Sandy Soil</button>
+        </div>
+        <div data-value="loamy" onclick="selectSoil('Loamy')">
+            <img src="./images/loamy.png" alt="Loamy Soil">
+            <button>Loamy Soil</button>
+        </div>
+        <div data-value="silt" onclick="selectSoil('Silt')">
+            <img src="./images/silt.jpg" alt="Silt Soil">
+            <button>Silt Soil</button>
+        </div>
+        <div data-value="clay" onclick="selectSoil('Clay')">
+            <img src="./images/clay.jpg" alt="Clayey Soil">
+            <button>Clayey Soil</button>
+        </div>
+    </div>
+</div>
+
+            <!-- Soil Condition Dropdown -->
+<div class="form-group">
+    <label for="soil-cond">Soil Condition</label>
+    <select id="soil-cond" name="soil-cond" onclick="showSoilCondOptions()">
+        <option value="">Select Your Soil Condition</option>
+    </select>
+</div>
+
+<!-- Hidden container for soil condition selection -->
+<div id="cond-container" class="optcontainer" style="display: none;">
+    <h2>Select Your Soil Condition</h2><br>
+    <div class="crop-grid">
+        <div data-value="wet" onclick="selectSoilCond('Wet')">
+            <img src="./images/wet.jpg" alt="Wet Soil">
+            <button>Wet Soil</button>
+        </div>
+        <div data-value="dry" onclick="selectSoilCond('Dry')">
+            <img src="./images/dry.jpg" alt="Dry Soil">
+            <button>Dry Soil</button>
+        </div>
+        <div data-value="hard" onclick="selectSoilCond('Hard')">
+            <img src="./images/hard.jpg" alt="Hard Soil">
+            <button>Hard Soil</button>
+        </div>
+        <div data-value="cracked" onclick="selectSoilCond('Cracked')">
+            <img src="./images/cracked.jpg" alt="Cracked Soil">
+            <button>Cracked Soil</button>
+        </div>
+    </div>
+</div>
+
+
+            <!-- Previous Disease Infection -->
+            <div class="form-group">
+                <label>Previous Disease Infection?</label>
+                <div class="yes-no-container">
+                    <button type="button" id="diseaseYes" class="yes-no">Yes</button>
+                    <button type="button" id="diseaseNo" class="yes-no">No</button>
+                    <input type="hidden" id="diseaseInfection" name="diseaseInfection" value="">
+                </div>
+            </div>
+
+            <!-- Know pH and NPK Values -->
+<div class="form-group">
+    <label>Do you know the pH and NPK values?</label>
+    <div class="yes-no-container">
+        <button type="button" id="npkYes" class="yes-no">Yes</button>
+        <button type="button" id="npkNo" class="yes-no">No</button>
+        <input type="hidden" id="npkKnowledge" name="npkKnowledge" value="">
+    </div>
+</div>
+
+<!-- The hidden input fields for Soil pH and NPK Levels -->
+<div id="npkFields" style="display:none;">
+    <div class="form-group">
+        <label for="soilPh">Soil pH</label>
+        <input type="text" id="soilPh" name="soilPh" class="form-control" style="border: 2px solid green;">
+    </div>
+    <div class="form-group">
+        <label for="nitrogenLevel">Nitrogen (N) Level</label>
+        <input type="text" id="nitrogenLevel" name="nitrogenLevel" class="form-control" style="border: 2px solid green;">
+    </div>
+    <div class="form-group">
+        <label for="phosphorousLevel">Phosphorous (P) Level</label>
+        <input type="text" id="phosphorousLevel" name="phosphorousLevel" class="form-control" style="border: 2px solid green;">
+    </div>
+    <div class="form-group">
+        <label for="potassiumLevel">Potassium (K) Level</label>
+        <input type="text" id="potassiumLevel" name="potassiumLevel" class="form-control" style="border: 2px solid green;">
+    </div>
+</div>
+
+<script>
+    document.getElementById("npkYes").addEventListener("click", function() {
+        document.getElementById("npkFields").style.display = "block";
+        document.getElementById("npkKnowledge").value = "yes";
+    });
+
+    document.getElementById("npkNo").addEventListener("click", function() {
+        document.getElementById("npkFields").style.display = "none";
+        document.getElementById("npkKnowledge").value = "no";
+    });
+</script>
+
+
+            <!-- Submit Button -->
+            <button type="button" class="btn" id="submitBtn">Analyze</button>
+        </form>
+
+    </form>
+</div>
+
+<script>
+    function showCropOptions() {
+        const container = document.getElementById('crop-container');
+        container.style.display = 'block';  // Show the crop selection container
+    }
+
+    function selectCrop(cropValue) {
+        const selectElement = document.getElementById('crop-type');
+        selectElement.innerHTML = `<option value="${cropValue}">${cropValue.charAt(0).toUpperCase() + cropValue.slice(1)}</option>`;  // Update the dropdown to reflect the selected crop
+        document.getElementById('crop-container').style.display = 'none';  // Hide the crop selection container
+    }
+</script>
+
+<!-- JavaScript for showing and selecting soil types -->
+<script>
+    // Show the soil options when the user clicks the dropdown
+    function showSoilOptions() {
+        const soilContainer = document.getElementById('soil-container');
+        soilContainer.style.display = 'block';  // Show the soil selection grid
+    }
+
+    // Handle soil type selection and update the dropdown
+    function selectSoil(soilType) {
+        const selectElement = document.getElementById('soil-type');
+        selectElement.innerHTML = `<option value="${soilType}">${soilType}</option>`;  // Update the dropdown
+        document.getElementById('soil-container').style.display = 'none';  // Hide the soil selection grid
+    }
+</script>
+
+<!-- JavaScript for showing and selecting soil conditions -->
+<script>
+    // Show the soil condition options when the user clicks the dropdown
+    function showSoilCondOptions() {
+        const soilContainer = document.getElementById('cond-container');
+        soilContainer.style.display = 'block';  // Show the soil condition selection grid
+    }
+
+    // Handle soil condition selection and update the dropdown
+    function selectSoilCond(soilCondition) {
+        const selectElement = document.getElementById('soil-cond');
+        selectElement.innerHTML = `<option value="${soilCondition}">${soilCondition} Soil</option>`;  // Update the dropdown
+        document.getElementById('cond-container').style.display = 'none';  // Hide the soil selection grid
+    }
+</script>
+
+<script>
+    document.querySelector('.dropdown-select').addEventListener('click', function () {
+        const menu = this.nextElementSibling;
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
+    
+    window.addEventListener('click', function (e) {
+        const dropdown = document.querySelector('.dropdown');
+        if (!dropdown.contains(e.target)) {
+            document.querySelector('.dropdown-menu').style.display = 'none';
+        }
+    });
+</script>    
+
+<!-- Leaflet CSS and JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<!-- Flatpickr CSS and JS -->
+<script src="https://unpkg.com/flatpickr"></script>
+
+<!-- Leaflet Map Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the map and set its view to a default location and zoom level
+        var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+                // Add a draggable marker that will move to the selected location
+                var marker = L.marker([20.5937, 78.9629], { draggable: true }).addTo(map);
+
+                // Update the hidden input fields when the map is clicked
+                function onMapClick(e) {
+                    marker.setLatLng(e.latlng); // Move the marker
+                    document.getElementById('latitude').value = e.latlng.lat;
+                    document.getElementById('longitude').value = e.latlng.lng;
+                }
+        
+                // Listen for map clicks
+                map.on('click', onMapClick);
+        
+                // Update hidden input fields if the marker is dragged
+                marker.on('moveend', function(e) {
+                    var latlng = e.target.getLatLng();
+                    document.getElementById('latitude').value = latlng.lat;
+                    document.getElementById('longitude').value = latlng.lng;
+                });
+        
+                // Search functionality for the map
+                document.getElementById('search-location').addEventListener('input', function(e) {
+                    var query = e.target.value;
+                    if (query.length > 2) {
+                        fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=5`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length) {
+                                var latlng = [data[0].lat, data[0].lon];
+                                map.setView(latlng, 10);
+                                marker.setLatLng(latlng);
+                                document.getElementById('latitude').value = latlng[0];
+                                document.getElementById('longitude').value = latlng[1];
+                            }
+                        });
+                    }
+                });
+                
+        
+                // Use current location functionality
+                document.getElementById('use-current-location').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            var latlng = [position.coords.latitude, position.coords.longitude];
+                            map.setView(latlng, 10);
+                            marker.setLatLng(latlng);
+                            document.getElementById('latitude').value = latlng[0];
+                            document.getElementById('longitude').value = latlng[1];
+                        }, function() {
+                            alert("Unable to retrieve your location.");
+                        });
+                    } else {
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                });
+            });
+        
+            // Initialize flatpickr for the date input
+            flatpickr("#planting-date", {
+                dateFormat: "d-m-Y",
+                enableTime: false
+            });
+                // Handle Yes/No button selection
+                document.querySelectorAll('.yes-no').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const parent = this.parentElement;
+                        parent.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        const hiddenInput = parent.nextElementSibling;
+                        hiddenInput.value = this.textContent;
+                    });
+                });
+        
+            
+            </script> 
+        </body>
+        </html>

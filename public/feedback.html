@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+           background-color: #a6fc9b;
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            text-align: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(83, 198, 98, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+     
+        
+        .rating {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .star {
+            font-size: 2rem;
+            color: #d3d3d3;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .star.selected,
+        .star:hover {
+            color: #da7a0d;
+        }
+        
+        textarea {
+            width: 90%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            border-color:#333;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #0d5610;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .thank-you-page {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .thank-you-page img {
+            width: 100px;
+        }
+        
+        .thank-you-page button {
+            margin-top: 20px;
+        }
+        </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Feedback</h2>
+        <div class="rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <textarea id="review" placeholder="Write your review here..." rows="5"></textarea>
+        <button class="btn" id="submitBtn">Submit</button>
+    </div>
+    
+        <div class="class-container">
+            <div id="thankYouPage" class="thank-you-page" style="display: none;">
+                <div id="thankYouMessage"></div>
+                <button class="btn" id="backBtn">Back</button>
+
+            </div>
+            <img src=".images/image.png" style="border-radius:20px; ">
+        </div>
+    
+    <script>document.addEventListener('DOMContentLoaded', function() {
+        let selectedRating = 0;
+    
+        // Handle star rating selection
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = this.dataset.value;
+                document.querySelectorAll('.star').forEach(s => {
+                    s.classList.remove('selected');
+                    if (s.dataset.value <= selectedRating) {
+                        s.classList.add('selected');
+                    }
+                });
+            });
+        });
+    
+        // Handle submit button click
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            if (selectedRating > 0) {
+                const reviewText = document.getElementById('review').value.trim();
+    
+                // Example logic for showing thank you message
+                const thankYouMessage = reviewText.toLowerCase().includes('bad') ? 
+                    'Sorry for the inconvenience. We will work on improving!' :
+                    'Thank you for your feedback! 😊 Welcome back!';
+    
+                document.querySelector('.container').style.display = 'none';
+                document.getElementById('thankYouMessage').innerHTML = `
+                    <img src="images/smile.png" alt="Smiley Emoji">
+                    <h3>${thankYouMessage}</h3>
+                `;
+                document.getElementById('thankYouPage').style.display = 'block';
+            } else {
+                alert('Please select a rating.');
+            }
+        });
+    
+        // Handle back button click
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.querySelector('.container').style.display = 'block';
+            document.getElementById('thankYouPage').style.display = 'none';
+            selectedRating = 0;
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('selected'));
+            document.getElementById('review').value = '';
+        });
+    });
+    </script>
+</body>
+</html>

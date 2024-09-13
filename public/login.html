@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Agro Doctor</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            background-image: url('./images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .nav-links li {
+            display: inline;
+        }
+
+        .navbar .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            /* White background for the logo */
+            padding: 5px 10px;
+            /* Optional padding for better spacing */
+            border-radius: 5px;
+            /* Optional rounded corners */
+        }
+
+        .logo img {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            width: 900px;
+            background-color: green;
+            border: 1px solid #72da3d;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(205, 250, 212, 0.8);
+            /* Semi-transparent background */
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group input {
+            width: 50%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .illustration img {
+            width: 100%;
+            /* Scale the image to fit within the container */
+            height: auto;
+            /* Maintain the aspect ratio */
+            max-width: 700px;
+            /* Maximum width of the image */
+            margin: 20px auto;
+            /* Center the image horizontally */
+            display: block;
+            /* Ensure the image is block-level for centering */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">
+            <img src="./images/logo.png" alt="Logo">
+            <h2>Agro Doctor</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#">Login/Register</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="name">Enter Name</label><br>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail address</label><br>
+                <input type="email" id="email" name="email" required
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                       title="Enter a valid email address">
+            </div>
+            
+
+            <div class="form-group">
+                <button type="submit" class="btn">Submit</button>
+            </div>
+            <div class="illustration">
+                <img src="./images/farmer.png" alt="Illustration">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value; // Get email instead of mobile
+    
+            // Send the form data to the server
+            fetch('/send-otp', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            })
+            
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect to verify-otp.html after sending OTP
+                    window.location.href = 'verify-otp.html';
+                } else {
+                    alert('Error sending OTP');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

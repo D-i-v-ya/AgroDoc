@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Agro Doctor</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            background-image: url('./images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            justify-content: center;
+            /* Center vertically */
+            align-items: center;
+            /* Center horizontally */
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            /* Position navbar at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            /* Ensure navbar is on top */
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .navbar .logo img {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .nav-links li {
+            display: inline;
+        }
+
+        .navbar .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            width: 900px;
+            background-color: rgba(205, 250, 212, 0.8);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 80px;
+            /* Adjust for navbar height */
+        }
+
+        .button-grid {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px 20px;
+            justify-items: center;
+        }
+
+        .button-grid div {
+            text-align: center;
+        }
+
+        .button-grid img {
+            width: 150px;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .button-grid img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-grid button {
+            padding: 10px;
+            background: linear-gradient(135deg, #ffffff, #f7f7f7);
+            color: black;
+            border: 2px solid #fefefe;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 160px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .button-grid button:hover {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+            transform: translateY(-5px);
+        }
+
+        .button-grid button.active {
+            background-color: #b3d7ff;
+            color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        /* Bot Button Styling */
+        .bot-container {
+            position: fixed;
+            bottom: 10px;
+            /* Adjusted from the bottom */
+            right: 10px;
+            /* Adjusted from the right */
+            width: 60px;
+            height: 50px;
+            text-align: center;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .bot-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        /* Animation for the bot */
+        .bot-container:hover {
+            transform: scale(1.1);
+        }
+
+        /* Simple bounce animation */
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-15px);
+            }
+
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .bot-container {
+            animation: bounce 2s infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="./images/logo.png" alt="Logo">
+            <h2>Agro Doctor</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="home.html" class="home">Logout</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <h2>Dashboard</h2>
+        <div class="button-grid">
+            <div>
+                <img src="./images/fertilizer.jpg" alt="Fertilizer Prediction">
+                <button onclick="window.location.href='fertilizerPred.html'">Fertilizer Prediction</button>
+            </div>
+            <div>
+                <img src="./images/SoilTest.jpg" alt="Soil Analysis">
+                <button onclick="window.location.href='SoilAnal.html'">Soil Analysis</button>
+            </div>
+            <div>
+                <img src="./images/crop.png" alt="Crop Management">
+                <button onclick="window.location.href='cropMngm.html'">Crop Management</button>
+            </div>
+            <div>
+                <img src="./images/irrigation.png" alt="Irrigation Management">
+                <button onclick="window.location.href='irriMngm'">Irrigation Management</button>
+            </div>
+            <div>
+                <img src="./images/weather.jpg" alt="Weather Forecast">
+                <button onclick="window.location.href='weather.html'">Weather Forecast</button>
+            </div>
+            <div>
+                <img src="./images/adv.jpg" alt="Agricultural Advisory">
+                <button onclick="window.location.href='advisory.html'">Agricultural Advisory</button>
+            </div>
+            <div>
+                <img src="./images/mark.jpg" alt="Market Information">
+                <button onclick="window.location.href='market.html'">Market Information</button>
+            </div>
+            <div>
+                <img src="./images/edu.jpg" alt="Educational Resources">
+                <button onclick="window.location.href='edu.html'">Educational Resources</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bot-container" onclick="openChatBot()">
+        <img src="./images/bot.png" alt="Chatbot">
+    </div>
+    <script>
+        function updateSidebar(section, button) {
+            // Logic for updating the sidebar or page content based on the button clicked
+            console.log('Selected section:', section);
+            // Example: add 'active' class to the clicked button and remove from others
+            document.querySelectorAll('.button-grid button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

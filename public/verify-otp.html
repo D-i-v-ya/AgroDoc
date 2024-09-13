@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - Agro Doctor</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            background-image: url('./images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .nav-links li {
+            display: inline;
+        }
+
+        .navbar .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .logo img {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            width: 900px;
+            background-color: rgba(205, 250, 212, 0.8);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .otp-container {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .otp-container .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .otp-container .otp-inputs input {
+            width: 40px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .otp-container .resend-timer {
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .illustration img {
+            width: 100%;
+            height: auto;
+            max-width: 700px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">
+            <img src="./images/logo.png" alt="Logo">
+            <h2>Agro Doctor</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="login.html">Login/Register</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+
+        <!-- Nested OTP container -->
+        <div class="otp-container">
+            <img src="https://img.icons8.com/fluency/48/000000/lock.png" alt="OTP Icon" />
+            <h2>OTP Verification</h2>
+            <p>One Time Password (OTP) has been sent via Email to <strong>rebeccajohn@gmail.com</strong>.<br> Enter the OTP below to verify it.</p>
+
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+            </div>
+
+            <div class="resend-timer">
+                Resend OTP in <span>00:08</span>
+            </div>
+
+            <button class="btn">Verify OTP</button>
+        </div>
+
+        <div class="illustration">
+            <img src="./images/farmer.png" alt="Illustration">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('verifyForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+
+            // Disable the button to prevent multiple clicks
+            const verifyButton = event.target.querySelector('button');
+            verifyButton.disabled = true;
+
+            // Send the OTP to the server for verification
+            fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, otp })
+            })
+            
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = 'dashboard.html'; // Redirect to dashboard
+                    } else {
+                        document.getElementById('errorMessage').textContent = 'Incorrect OTP. Please try again.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+                })
+                .finally(() => {
+                    verifyButton.disabled = false; // Re-enable the button
+                });
+        });
+
+        document.getElementById('resendOtp').addEventListener('click', function () {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                document.getElementById('errorMessage').textContent = 'Please enter your email to resend OTP.';
+                return;
+            }
+
+            // Disable the button to prevent multiple clicks
+            const resendButton = event.target;
+            resendButton.disabled = true;
+
+            fetch('/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('OTP resent successfully!');
+                    } else {
+                        document.getElementById('errorMessage').textContent = 'Error resending OTP. Please try again.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+                })
+                .finally(() => {
+                    resendButton.disabled = false; // Re-enable the button
+                });
+        });
+    </script>
+
+</body>
+
+</html>
